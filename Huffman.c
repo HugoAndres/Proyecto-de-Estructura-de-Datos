@@ -58,3 +58,24 @@ void conseguirBinarioLeido (unsigned char codificado[],
 			    unsigned char codificadoBinario[]);
 void conseguirMensaje (char codificadoLeidoB[],
 		       struct Lista *codigosConstruidos, char mensaje[]);
+
+//FUNCIÓN MOSTRAR
+void
+Mostrar (struct Lista *inicio)
+{
+  int contador = 0;
+  if (inicio == NULL)
+    {
+      printf ("Lista vacia.\n");
+    }
+  else
+    {
+      printf ("Caracter:\tFrecuencia:\n\n");
+      while (inicio != NULL)
+	{
+	  printf ("%c\t%d\n", inicio->caracter, inicio->frecuencia);
+	  contador++;
+	  inicio = inicio->siguiente;
+	}
+    }
+}
