@@ -1,6 +1,18 @@
 #include"huffman.h"
 
 struct Lista *
+crearNodo (char dato, int frecuencia, struct Arbol *arbol)
+{
+  struct Lista *nuevo = NULL;
+  nuevo = (struct Lista *) malloc (sizeof (struct Lista));
+  nuevo->caracter = dato;
+  nuevo->frecuencia = frecuencia;
+  nuevo->siguiente = NULL;
+  nuevo->anterior = NULL;
+  nuevo->arbol = arbol;
+}
+
+struct Lista *
 generaListadeFrecuencia (char *frase)
 {
   struct Lista *listaGenerada = NULL;
