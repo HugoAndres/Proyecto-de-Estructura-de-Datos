@@ -228,3 +228,142 @@ crearNodoHoja (char caracter, int frecuencia)
   nuevo->Derecho = NULL;
 }
 
+int
+Tamano (struct Lista *inicio)
+{
+  int contador = 0;
+  if (inicio == NULL)
+    {
+      printf ("Lista vacia.\n");
+    }
+  else
+    {
+      while (inicio->siguiente != NULL)
+	{
+	  contador++;
+	  inicio = inicio->siguiente;
+	}
+    }
+  return contador;
+}
+
+void
+generarArbol (struct Lista *inicio, struct Lista *inicioOriginal,
+	      struct Arbol **raiz)
+{
+  struct Arbol *hijoIzquierdo;
+  struct Arbol *hijoDerecho;
+  struct Arbol *padre;
+
+  int auxfrecuencia = 0;
+  char caracterImpro = '<';
+  int tamano = 0;
+
+  struct Lista *recorre;
+  recorre = inicioOriginal;
+  int i = 1;
+  int selector = 0;
+
+  if (inicio == NULL)
+    {
+      printf ("Lista vacia de genera arbol\n\n");
+      while (recorre->siguiente != NULL)
+	{
+	  recorre = recorre->siguiente;
+	}
+      printf ("Me encuentro aqui 1\n\n");
+      *raiz = recorre->arbol;
+    }
+  else
+    {
+      if (inicio == NULL)
+	{
+	  while (recorre->siguiente != NULL)
+	    {
+	      recorre = recorre->siguiente;
+	    }
+	  printf ("Me encuentro aqui 2\n\n");
+	  *raiz = recorre->arbol;
+	}
+      else
+	{
+	  if (inicio->arbol != NULL)
+	    {
+	      hijoIzquierdo = inicio->arbol;
+	    }
+	  else
+	    {
+	      hijoIzquierdo =
+		crearNodoHoja (inicio->caracter, inicio->frecuencia);
+	    }
+	  inicio = inicio->siguiente;
+	  if (inicio->arbol != NULL)
+	    {
+	      hijoDerecho = inicio->arbol;
+	    }
+	  else
+	    {
+	      hijoDerecho =
+		crearNodoHoja (inicio->caracter, inicio->frecuencia);
+	    }
+	  inicio = inicio->siguiente;
+	  auxfrecuencia = hijoIzquierdo->frecuencia + hijoDerecho->frecuencia;
+	  padre = crearNodoHoja (caracterImpro, auxfrecuencia);
+	  padre->Izquierdo = hijoIzquierdo;
+	  padre->Derecho = hijoDerecho;
+
+	  while (recorre != NULL && selector == 0)
+	    {
+	      if ((padre->frecuencia + 1) <= recorre->frecuencia)
+		{
+		  selector = 1;
+		}
+	      else
+		{
+		  i++;
+		}
+	      recorre = recorre->siguiente;
+	    }
+	  tamano = Tamano (inicioOriginal) + 1;
+	  printf ("Tamano: %d\n", tamano);
+	  printf ("Posicion: %d\n", i);
+	  if (tamano >= i)
+	    {
+	      inicioOriginal =
+		altaPosicion (inicioOriginal, i, padre->frecuencia,
+			      padre->caracter, padre);
+	    }
+	  else
+	    {
+	      inicioOriginal =
+		altaFinal (inicioOriginal, padre->caracter, padre->frecuencia,
+			   padre);
+
+	    }
+	  Mostrar (inicioOriginal);
+	  system ("read -p 'Press Enter to continue...' var");
+	  generarArbol (inicio, inicioOriginal, &(*raiz));
+	}
+    }
+}
+
+void
+generarListaArbolPreOrden (struct Arbol *raiz, struct Lista **inicio)
+{
+  if (raiz != NULL)
+    {
+      *inicio = altaFinal (*inicio, raiz->caracter, raiz->frecuencia, NULL);
+      if (raiz->Izquierdo != NULL)
+	{
+	  generarListaArbolPreOrden (raiz->Izquierdo, &*inicio);
+	  if (raiz->Derecho != NULL)
+	    {
+	      generarListaArbolPreOrden (raiz->Derecho, &*inicio);
+	    }
+	}
+      else
+	{
+	  printf ("Arbol vacio.\n\n");
+	}
+    }
+}
