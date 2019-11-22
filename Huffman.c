@@ -13,7 +13,7 @@ crearNodo (char dato, int frecuencia, struct Arbol *arbol)
 };
 
 struct Lista *
-altaInicio (struct Lista *inicio, char dato, int frecuencia,
+creaLista (struct Lista *inicio, char dato, int frecuencia,
 	    struct Arbol *arbol)
 {
   struct Lista *nuevo = NULL;
@@ -32,7 +32,7 @@ altaInicio (struct Lista *inicio, char dato, int frecuencia,
 };
 
 struct Lista *
-altaPosicion (struct Lista *inicio, int posicion, int frecuencia,
+posicionPadre (struct Lista *inicio, int posicion, int frecuencia,
 	      char dato, struct Arbol *arbol)
 {
   struct Lista *nuevo = NULL;
@@ -49,11 +49,11 @@ altaPosicion (struct Lista *inicio, int posicion, int frecuencia,
 	}
       else if (posicion == 1)
 	{
-	  inicio = altaInicio (inicio, dato, frecuencia, arbol);
+	  inicio = creaLista (inicio, dato, frecuencia, arbol);
 	}
       else if (posicion == tamano + 2)
 	{
-	  inicio = altaFinal (inicio, dato, frecuencia, arbol);
+	  inicio = recorreInicio (inicio, dato, frecuencia, arbol);
 	}
       else
 	{
@@ -74,7 +74,7 @@ altaPosicion (struct Lista *inicio, int posicion, int frecuencia,
 };
 
 struct Lista *
-altaFinal (struct Lista *inicio, char dato, int frecuencia,
+recorreInicio (struct Lista *inicio, char dato, int frecuencia,
 	   struct Arbol *arbol)
 {
   struct Lista *nuevo = NULL;
@@ -147,7 +147,7 @@ generaListadeFrecuencia (char *frase)
     {
       if (listaGenerada == NULL)
 	{
-	  listaGenerada = altaInicio (listaGenerada, frase[i], 1, NULL);
+	  listaGenerada = creaLista (listaGenerada, frase[i], 1,NULL);
 	}
       else
 	{
@@ -177,7 +177,7 @@ generaListadeFrecuencia (char *frase)
 	    }
 	  if (flag == 0)
 	    {
-	      listaGenerada = altaFinal (listaGenerada, frase[i], 1, NULL);
+	     listaGenerada = recorreInicio (listaGenerada, frase[i], 1, NULL);
 	    }
 	  flag = 0;
 	}
@@ -224,9 +224,9 @@ void
 generarArbol (struct Lista *inicio, struct Lista *inicioOriginal,
 	      struct Arbol **raiz)
 {
-  struct Arbol *hijoIzquierdo;
-  struct Arbol *hijoDerecho;
-  struct Arbol *padre;
+  struct Arbol *hijoIzquierdo=NULL;
+  struct Arbol *hijoDerecho=NULL;
+  struct Arbol *padre=NULL;
 
   int auxfrecuencia = 0;
   char caracterImpro = '*';
@@ -289,13 +289,13 @@ generarArbol (struct Lista *inicio, struct Lista *inicioOriginal,
       if (tamano >= i)
 	{
 	  inicioOriginal =
-	    altaPosicion (inicioOriginal, i, padre->frecuencia,
+	    posicionPadre (inicioOriginal, i, padre->frecuencia,
 			  padre->caracter, padre);
 	}
       else
 	{
 	  inicioOriginal =
-	    altaFinal (inicioOriginal, padre->caracter, padre->frecuencia,
+	    recorreInicio (inicioOriginal, padre->caracter, padre->frecuencia,
 		       padre);
 
 	}
@@ -339,7 +339,7 @@ generarListaArbolPreOrden (struct Arbol *raiz, struct Lista **inicio)
 {
   if (raiz != NULL)
     {
-      *inicio = altaFinal (*inicio, raiz->caracter, raiz->frecuencia, NULL);
+      *inicio = recorreInicio (*inicio, raiz->caracter, raiz->frecuencia, NULL);
       if (raiz->Izquierdo != NULL)
 	{
 	  generarListaArbolPreOrden (raiz->Izquierdo, &*inicio);
@@ -373,7 +373,7 @@ conseguirCodificacion (struct Arbol *raiz, char codigoCaracter[],
       if (raiz->caracter != '<')
 	{
 	  codigoCaracter[i] = '\0';
-	  *inicio = altaFinal (*inicio, raiz->caracter, 0, NULL);
+	  *inicio = recorreInicio (*inicio, raiz->caracter, 0, NULL);
 	  recorre = *inicio;
 	  while (recorre->siguiente != NULL)
 	    {
@@ -431,65 +431,6 @@ conseguirCodigoBinario (struct Lista *codigos, char oracion[],
   codificacionC[l] = '\0';
 printf("\n");
 };
-
-
-
-struct Arbol *
-altaArbol (struct Lista **inicio, struct Arbol *arbol)
-{
-  struct Lista *aux;
-  aux = (*inicio);
-  while (aux != NULL)
-    {
-      arbol = generarArbolPreOrden (arbol, &aux);
-      aux = aux->siguiente;
-    }
-  return arbol;
-};
-
-struct Arbol *
-generarArbolPreOrden (struct Arbol *raiz, struct Lista **inicio)
-{
-  struct Arbol *recorre = NULL;
-  struct Arbol *nuevaHoja = NULL;
-
-  nuevaHoja = crearNodoHoja ((*inicio)->caracter, (*inicio)->frecuencia);
-  int sum = 0;
-  if (raiz == NULL)
-    {
-      return nuevaHoja;
-    }
-  else
-    {
-      recorre = raiz;
-      while (recorre != NULL)
-	{
-	  if (recorre->Izquierdo == NULL && recorre->Derecho == NULL)
-	    {
-	      recorre->Izquierdo = nuevaHoja;
-	      return raiz;
-	    }
-	  if (recorre->Derecho != NULL)
-	    {
-	      recorre = recorre->Derecho;
-	    }
-	  else
-	    {
-	      sum = recorre->Izquierdo->frecuencia + nuevaHoja->frecuencia;
-	      if (recorre->frecuencia == sum)
-		{
-		  recorre->Derecho = nuevaHoja;
-		  return raiz;
-		}
-	      else
-		{
-		  recorre = recorre->Izquierdo;
-		}
-	    }
-	}
-    }
-};
-
 
 void
 MostrarCodigos (struct Lista *inicio)

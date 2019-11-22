@@ -25,9 +25,9 @@ struct Lista
 };
 
 struct Lista *crearNodo (char, int, struct Arbol *);
-struct Lista *altaInicio (struct Lista *, char, int, struct Arbol *);
-struct Lista *altaPosicion (struct Lista *, int, int, char, struct Arbol *);
-struct Lista *altaFinal (struct Lista *, char, int, struct Arbol *);
+struct Lista *creaLista (struct Lista *, char, int, struct Arbol *);
+struct Lista *posicionPadre (struct Lista *, int, int, char, struct Arbol *);
+struct Lista *recorreInicio (struct Lista *, char, int, struct Arbol *);
 int Tamano (struct Lista *);
 void Mostrar (struct Lista *);
 
@@ -36,18 +36,8 @@ struct Lista *ordenarLista (struct Lista *);
 void generarArbol (struct Lista *, struct Lista *, struct Arbol **);
 void mostrarArbolPreOrden (struct Arbol *);
 void generarListaArbolPreOrden (struct Arbol *, struct Lista **);
-void crearArchivodeArbol (struct Arbol *, struct Lista *);
 void conseguirCodificacion (struct Arbol *, char[], struct Lista **, int);
 void conseguirCodigoBinario (struct Lista *, char[], char[], char[]);
-void crearArchivodeCodigo (char[]);
 struct Arbol *crearNodoHoja (char, int);
 void MostrarCodigos (struct Lista *);
-
-
-struct Lista *conseguirArbolPreOrden ();
-struct Arbol *altaArbol (struct Lista **, struct Arbol *);
-struct Arbol *generarArbolPreOrden (struct Arbol *, struct Lista **);
-void leerArchivoCodificado (unsigned char[]);
-void conseguirBinarioLeido (unsigned char[], unsigned char[]);
-void conseguirMensaje (unsigned char[], struct Lista *, char[]);
 #endif
